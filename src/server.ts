@@ -7,6 +7,7 @@ dotenv.config();
 
 export default function createServer() {
   const app: Application = express();
+  app.use(express.json());
   const db = process.env.MONGO_URI || '';
 
   mongoose

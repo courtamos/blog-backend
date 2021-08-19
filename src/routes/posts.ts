@@ -16,7 +16,6 @@ router.get('/', (req: Request, res: Response) => {
 // @desc create a new post
 // @access public
 router.post('/', (req: Request, res: Response) => {
-  console.log(req.body)
   const newPost = new PostModel({
     title: req.body.title,
     content: req.body.content,
@@ -27,4 +26,12 @@ router.post('/', (req: Request, res: Response) => {
     .then(post => res.json(post));
 });
 
+// @route DELETE /posts
+// @desc delete a post
+// @access public
+router.delete('/:id', (req: Request, res: Response) => {
+  PostModel.findById(req.params.id)
+    .then(post => post?.remove().then(() => res.json({success: true})))
+    .catch(err => res.status(404).json({success: false}))
+});
 export default router;
