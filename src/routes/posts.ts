@@ -12,4 +12,19 @@ router.get('/', (req: Request, res: Response) => {
     .then(posts => res.json(posts))
 });
 
+// @route POST /posts
+// @desc create a new post
+// @access public
+router.post('/', (req: Request, res: Response) => {
+  console.log(req.body)
+  const newPost = new PostModel({
+    title: req.body.title,
+    content: req.body.content,
+    category: req.body.category
+  });
+
+  newPost.save()
+    .then(post => res.json(post));
+});
+
 export default router;
