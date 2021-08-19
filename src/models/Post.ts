@@ -10,10 +10,10 @@ interface Post {
 const schema = new Schema<Post>({
   title: { type: String , required: true },
   content: { type: String, required: true },
-  date: { type: Date, required: true, default: Date.now },
+  date: { type: Date, default: Date.now },
   category: { type: String, required: true }
 });
 
 const PostModel = model<Post>('Post', schema);
 
-module.exports = PostModel;
+export default PostModel;

@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import routes from "./routes";
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ export default function createServer() {
     })
     .then(() => console.log('MongoDB is now connected...'))
     .catch(err => console.log(err));
+
+  app.use(routes);
     
   app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello');
