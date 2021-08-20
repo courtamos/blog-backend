@@ -34,4 +34,5 @@ router.delete('/:id', (req: Request, res: Response) => {
     .then(post => post?.remove().then(() => res.json({success: true})))
     .catch(err => res.status(404).json({success: false}))
 });
+
 export default router;

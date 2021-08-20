@@ -14,6 +14,7 @@ export default function createServer() {
   .connect(db, 
     {
       useNewUrlParser: true,
+      useCreateIndex: true,
       useUnifiedTopology: true
     })
     .then(() => console.log('MongoDB is now connected...'))
