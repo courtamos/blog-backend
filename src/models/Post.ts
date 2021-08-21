@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model, connect } from "mongoose";
 
 interface Post {
   title: string;
@@ -8,12 +8,12 @@ interface Post {
 }
 
 const schema = new Schema<Post>({
-  title: { type: String , required: true },
+  title: { type: String, required: true },
   content: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  category: { type: String, required: true }
+  category: { type: String, required: true },
 });
 
-const PostModel = model<Post>('Post', schema);
+const PostModel = model<Post>("Post", schema);
 
 export default PostModel;

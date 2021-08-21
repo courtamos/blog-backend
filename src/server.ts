@@ -8,21 +8,20 @@ dotenv.config();
 export const createServer = async () => {
   const app: Application = express();
   app.use(express.json());
-  const db = process.env.MONGO_URI || '';
+  const db = process.env.MONGO_URI || "";
 
   try {
-    await mongoose.connect(db, 
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true
-      })
-      console.log('MongoDB is now connected...');
+    await mongoose.connect(db, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB is now connected...");
   } catch (err) {
     console.log(err);
   }
 
   app.use(routes);
-  
+
   return app;
-}
+};
