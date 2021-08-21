@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import UserModel from "../models/User";
+import { authMiddleware } from "../middleware/auth";
 
 dotenv.config();
 
@@ -50,5 +51,17 @@ router.post("/", async (req: Request, res: Response) => {
     }
   });
 });
+
+// @route GET /auth/user
+// @desc get users data
+// @access private
+router.get(
+  "/user",
+  authMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = await UserModel.findById(req.user.id).select("-password");
+    res.json(user);
+  }
+);
 
 export default router;
