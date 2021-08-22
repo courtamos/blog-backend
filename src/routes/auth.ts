@@ -10,10 +10,10 @@ dotenv.config();
 const router = Router();
 const jwtSecret = process.env.JWTSECRET || "";
 
-// @route POST /auth
-// @desc auth user
+// @route POST /auth/login
+// @desc login route
 // @access public
-router.post("/", async (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -51,17 +51,5 @@ router.post("/", async (req: Request, res: Response) => {
     }
   });
 });
-
-// @route GET /auth/user
-// @desc get users data
-// @access private
-router.get(
-  "/user",
-  authMiddleware,
-  async (req: Request, res: Response, next: NextFunction) => {
-    const user = await UserModel.findById(req.user.id).select("-password");
-    res.json(user);
-  }
-);
 
 export default router;

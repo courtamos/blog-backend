@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import UserModel from "../models/User";
+import { authMiddleware } from "../middleware/auth";
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ const jwtSecret = process.env.JWTSECRET || "";
 // @route POST /users
 // @desc register new user
 // @access public
-router.post("/", async (req: Request, res: Response) => {
+router.post("/register", async (req: Request, res: Response) => {
   const { firstName, lastName, email, password, subscribed, type } = req.body;
 
   if (!firstName || !lastName || !email || !password) {
@@ -58,5 +59,17 @@ router.post("/", async (req: Request, res: Response) => {
     }
   });
 });
+
+// @route GET /users
+// @desc get users data
+// @access private
+router.get(
+  "/",
+  authMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = await UserModel.findById(req.user.id).select("-password");
+    res.json(user);
+  }
+);
 
 export default router;

@@ -14,7 +14,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 // @route POST /posts
 // @desc create a new post
-// @access public
+// @access private => admin only
 router.post("/", adminMiddleware, async (req: Request, res: Response) => {
   const newPost = new PostModel({
     title: req.body.title,
