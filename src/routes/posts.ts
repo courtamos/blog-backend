@@ -3,6 +3,7 @@ import PostModel from "../models/Post";
 import { adminMiddleware } from "../middleware/admin";
 import { authMiddleware } from "../middleware/auth";
 import LikeModel from "../models/Like";
+import CommentModel from "../models/Comment";
 
 const router = Router();
 
@@ -113,6 +114,59 @@ router.delete(
 
       await found.delete();
       res.json({ msg: "Successfully deleted like" });
+    } catch (err) {
+      res.status(500).json({ success: false });
+    }
+  }
+);
+
+// COMMENTS //
+
+// @route POST /posts/:postId/comments
+// @desc create a comment
+// @access private
+router.post(
+  "/:postId/comments",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const { postId } = req.params;
+
+    try {
+      const comment = new CommentModel({
+        userId: req.user.id,
+        postId,
+        content: req.body.content,
+      });
+
+      await comment.save();
+      res.json({ msg: "Successfully commented" });
+    } catch (err) {
+      res.status(500).json({ success: false });
+    }
+  }
+);
+
+// @route DELETE /posts/:postId/comments/:commentId
+// @desc delete a comment
+// @access private
+router.delete(
+  "/:postId/comments/:commentId",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const { postId, commentId } = req.params;
+
+    try {
+      const found = await CommentModel.findOne({
+        userId: req.user.id,
+        _id: commentId,
+      });
+
+      if (!found) {
+        return res.status(404).json({ msg: "Not found" });
+      }
+
+      await found.delete();
+      res.json({ msg: "Successfully deleted comment" });
     } catch (err) {
       res.status(500).json({ success: false });
     }
