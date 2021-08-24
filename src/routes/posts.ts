@@ -173,4 +173,22 @@ router.delete(
   }
 );
 
+// @route PATCH /posts/:postId/comments/:commentId
+// @desc edit a comment
+// @access private
+router.patch(
+  "/:postId/comments/:commentId",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const comment = await CommentModel.findById(req.params.commentId);
+
+    try {
+      await comment?.update(req.body);
+      res.json({ msg: "Successfully updated commented" });
+    } catch (err) {
+      res.status(500).json({ success: false });
+    }
+  }
+);
+
 export default router;
