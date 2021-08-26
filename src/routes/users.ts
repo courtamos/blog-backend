@@ -72,4 +72,33 @@ router.get(
   }
 );
 
+// @route DELETE /users/:userId
+// @desc delete a users
+// @access private
+router.delete(
+  "/delete/:userId",
+  authMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params;
+    try {
+      const deleteUser = await UserModel.findById(userId);
+      const user = await UserModel.findById(req.user.id);
+      if (!user) {
+        return res.status(500).json({ msg: "Internal server error" });
+      }
+      if (!deleteUser) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+
+      if (userId === req.user.id.toString() || user.type === "admin") {
+        await deleteUser.delete();
+        return res.json({ msg: "Successfully deleted user" });
+      }
+      return res.status(401).json({ msg: "Unauthorized" });
+    } catch {
+      res.status(500).json({ success: false });
+    }
+  }
+);
+
 export default router;
