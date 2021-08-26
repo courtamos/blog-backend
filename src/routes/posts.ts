@@ -4,6 +4,7 @@ import { adminMiddleware } from "../middleware/admin";
 import { authMiddleware } from "../middleware/auth";
 import LikeModel from "../models/Like";
 import CommentModel from "../models/Comment";
+import UserModel from "../models/User";
 
 const router = Router();
 
@@ -157,16 +158,24 @@ router.delete(
 
     try {
       const found = await CommentModel.findOne({
-        userId: req.user.id,
         _id: commentId,
+        postId: postId,
       });
-
       if (!found) {
         return res.status(404).json({ msg: "Not found" });
       }
 
-      await found.delete();
-      res.json({ msg: "Successfully deleted comment" });
+      const user = await UserModel.findById(req.user.id).select("-password");
+      if (!user) {
+        return res.status(500).json({ msg: "Internal server error" });
+      }
+
+      if (req.user.id === found.userId.toString() || user.type === "admin") {
+        await found.delete();
+        return res.json({ msg: "Successfully deleted comment" });
+      }
+
+      return res.status(401).json({ msg: "Unauthorized" });
     } catch (err) {
       res.status(500).json({ success: false });
     }
